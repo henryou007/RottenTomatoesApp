@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "MoviesViewController.h"
 
 @interface AppDelegate ()
 
@@ -15,8 +16,39 @@
 @implementation AppDelegate
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     // Override point for customization after application launch.
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    NSString *moviesRequestUrl = @"http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=rh8p4z28bfxmrp96jp2b9y9b&country=us";
+    NSString *dvdsRequestUrl = @"http://api.rottentomatoes.com/api/public/v1.0/lists/dvds/new_releases.json?apikey=rh8p4z28bfxmrp96jp2b9y9b";
+    
+    MoviesViewController *moviesViewController = [[MoviesViewController alloc] initWithUrlString:moviesRequestUrl andTabTitle:@"Movies"];
+    UINavigationController *moviesNavigationController = [[UINavigationController alloc] initWithRootViewController:moviesViewController];
+    [moviesNavigationController.tabBarItem setImage:[UIImage imageNamed:@"movieIcon.jpg"]];
+    MoviesViewController *dvdsViewController = [[MoviesViewController alloc] initWithUrlString:dvdsRequestUrl andTabTitle:@"DVDs"];
+    UINavigationController *dvdsNavigationController = [[UINavigationController alloc] initWithRootViewController:dvdsViewController];
+    [dvdsNavigationController.tabBarItem setImage:[UIImage imageNamed:@"dvdIcon.jpg"]];
+    
+    [[UINavigationBar appearance] setBarTintColor:[UIColor blackColor]];
+    [[UINavigationBar appearance] setTranslucent:YES];
+    [[UINavigationBar appearance] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                           [UIColor yellowColor], NSForegroundColorAttributeName,
+                                                           [UIFont fontWithName:@"System" size:30.0], NSFontAttributeName, nil]];
+    
+    NSArray *myViewControllers = [[NSArray alloc] initWithObjects:
+                                  moviesNavigationController,
+                                  dvdsNavigationController, nil];
+    
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    [tabBarController setViewControllers:myViewControllers];
+    [[UITabBar appearance] setBarTintColor:[UIColor blackColor]];
+    [[UITabBar appearance] setTranslucent:YES];
+    
+    self.window.rootViewController = tabBarController;
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
